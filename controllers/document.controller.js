@@ -89,7 +89,7 @@ exports.uploadAndExtractPDF = async (req, res) => {
     //  Extract text from PDF
     const extractedText = await extractTextFromPDF(req.file.path);
     const preprocessedText = await preprocessText(extractedText);
-    const response = await axios.post("http://localhost:8000/classify", {
+    const response = await axios.post(`${process.env.ML_SERVICE_URL || "http://localhost:8000"}/classify`, {
       text: preprocessedText,
     });
     const { document_type, confidence } = response.data;
@@ -119,7 +119,7 @@ exports.uploadAndExtractPDF = async (req, res) => {
 
     // 🆕 Extract Clauses
     try {
-      const clauseResponse = await axios.post("http://localhost:8000/extract_clauses", {
+      const clauseResponse = await axios.post(`${process.env.ML_SERVICE_URL || "http://localhost:8000"}/extract_clauses`, {
         text: preprocessedText,
       });
       if (clauseResponse.data) {
